@@ -1,0 +1,15 @@
+[submodule "website"]
+	path = website
+	url = https://git.holy.how/holy/website
+[submodule "db-server"]
+	path = db-server
+	url = https://git.holy.how/holy/db-server
+[submodule "rammerhead"]
+	path = rammerhead
+	url = https://github.com/binary-person/rammerhead
+[submodule "bare-server-node"]
+	path = bare-server-node
+	url = https://github.com/tomphttp/bare-server-node
+[submodule "theatre"]
+	path = theatre
+	url = https://git.holy.how/holy/theatre
