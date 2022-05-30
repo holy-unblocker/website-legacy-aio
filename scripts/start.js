@@ -14,7 +14,7 @@ import { join } from 'node:path';
 
 const server = express();
 
-function tryBind(port, host) {
+function tryBind(port, hostname) {
 	return new Promise((resolve, reject) => {
 		const server = createServer();
 
@@ -26,7 +26,7 @@ function tryBind(port, host) {
 			server.close(() => resolve());
 		});
 
-		server.listen(port, host);
+		server.listen(port, hostname);
 	});
 }
 
@@ -34,12 +34,12 @@ function tryBind(port, host) {
 const PORT_MIN = 1025;
 const PORT_MAX = 65536;
 
-async function createPort() {
+async function createPort(hostname) {
 	for (let i = 0; i < 1000; i++) {
 		const port = ~~(Math.random() * (PORT_MAX - PORT_MIN)) + PORT_MIN;
 
 		try {
-			await tryBind(port);
+			await tryBind(port, hostname);
 			return port;
 		} catch (error) {
 			continue;
@@ -100,14 +100,20 @@ for (let url of [
 }
 
 server.use(express.static(website_build));
-const port = process.env.PORT;
-const address = process.env.ADDRESS;
 
-server.listen(port, address, error => {
-	if (error) {
-		console.error(error);
-		process.exit(1);
-	}
+let port = process.env.PORT || 80;
+const hostname = process.env.hostname || '0.0.0.0';
 
-	console.log(`Listening on ${address}:${port}`);
+try {
+	await tryBind(port);
+} catch (error) {
+	const newPort = await createPort(hostname);
+	console.error(
+		`${hostname}:${port} is already in use. Binding to ${hostname}:${newPort} instead.`
+	);
+	port = newPort;
+}
+
+server.listen(port, hostname, () => {
+	console.log(`Listening on ${hostname}:${port}`);
 });

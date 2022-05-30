@@ -1,2 +1,2 @@
-source ./node-env.sh
+source ./env.sh
 npm start
