@@ -9,12 +9,13 @@ Holy Unblocker bundle for deployment on single server productions and IDEs (Repl
 ### Table of Contents
 
 1. [Setup](#setup)
-2. [Build](#build)
-3. [Start](#start)
+2. [Install](#install)
+3. [Build](#build)
+4. [Start](#start)
 
 ## Setup
 
-To setup this repository (after cloning into an IDE), you must run the init script.
+To setup this repository (after cloning into an IDE), you must run the init script. This will update and checkout all submodules.
 
 ```sh
 > ./init.sh
@@ -44,7 +45,7 @@ Once this repository is setup, you can run the build script in order to compile 
 
 ## Start
 
-Once this repository is built, you can start the webserver.
+Once this repository is built, you can select the "Run" button on Replit or run:
 
 ```sh
 > npm start
