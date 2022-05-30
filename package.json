@@ -11,9 +11,9 @@
 	"scripts": {
 		"build": "node scripts/build.js",
 		"start": "node scripts/start.js",
-		"install": "node scripts/install.js",
+		"submodules": "node scripts/install.js",
 		"ide": "npm run build && npm run start",
-		"prepare": "husky install"
+		"prepare": "husky install && npm run submodules && ./init.sh"
 	},
 	"author": "",
 	"type": "module",
