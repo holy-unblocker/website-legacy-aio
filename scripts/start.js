@@ -6,14 +6,13 @@ import {
 	bare_server,
 	rammerhead,
 } from '../config/paths.js';
-import Fastify from 'fastify';
-import FastifyStatic from '@fastify/static';
-import FasifyHTTPProxy from '@fastify/http-proxy';
+import express from 'express';
+import proxy from 'express-http-proxy';
 import { createServer } from 'node:net';
 import { fork } from 'node:child_process';
 import { join } from 'node:path';
 
-const server = new Fastify();
+const server = express();
 
 function tryBind(port, host) {
 	return new Promise((resolve, reject) => {
@@ -59,37 +58,56 @@ fork(join(bare_server, 'app.js'), {
 });
 
 const rhPort = await createPort();
+const rhCrossDomainPort = await createPort();
 
 fork(join(rammerhead, 'src', 'server', 'index.js'), {
 	cwd: rammerhead,
+	env: {
+		PORT: rhPort,
+		CROSS_DOMAIN_PORT: rhCrossDomainPort,
+	},
 });
 
-server.register(FastifyStatic, {
-	root: website_build,
-	decorateReply: false,
-});
+server.use('/theatre', express.static(join(theatre, 'public')));
+server.use('/api/bare', proxy(`http://localhost:${barePort}`));
+server.use(
+	'/api/db',
+	proxy(`https://static.holy.how/`, {
+		proxyReqPathResolver: req => `/db/${req.url}`,
+	})
+);
 
-server.register(FastifyStatic, {
-	root: join(theatre, 'public'),
-	prefix: '/theatre/',
-	decorateReply: false,
-});
+for (let url of [
+	'/([a-z0-9]{32})*',
+	'/rammerhead.js',
+	'/hammerhead.js',
+	'/transport-worker.js',
+	'/task.js',
+	'/sessionexists',
+	'/deletesession',
+	'/newsession',
+	'/editsession',
+	'/needpassword',
+	'/syncLocalStorage',
+	'/api/shuffleDict',
+]) {
+	server.use(
+		url,
+		proxy(`http://127.0.0.1:${rhPort}`, {
+			proxyReqPathResolver: req => req.originalUrl,
+		})
+	);
+}
 
-server.register(FasifyHTTPProxy, {
-	upstream: `http://localhost:${barePort}`,
-	prefix: '/api/bare', // optional
-});
+server.use(express.static(website_build));
+const port = process.env.PORT || 80;
+const address = process.env.ADDRESS || '127.0.0.1';
 
-server.register(FasifyHTTPProxy, {
-	upstream: `https://static.holy.how/db`,
-	prefix: '/api/db', // optional
-});
-
-server.listen(process.env.PORT || 80, process.env.ADDRESS, (error, url) => {
+server.listen(port, address, error => {
 	if (error) {
 		console.error(error);
 		process.exit(1);
 	}
 
-	console.log('View at', url);
+	console.log(`Listening on ${address}:${port}`);
 });

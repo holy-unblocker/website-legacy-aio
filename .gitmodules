@@ -1,6 +1,3 @@
-[submodule "website"]
-	path = website
-	url = https://git.holy.how/holy/website
 [submodule "db-server"]
 	path = db-server
 	url = https://git.holy.how/holy/db-server
@@ -13,3 +10,6 @@
 [submodule "theatre"]
 	path = theatre
 	url = https://git.holy.how/holy/theatre
+[submodule "website-fork-aio"]
+	path = website
+	url = https://git.holy.how/holy/website-fork-aio.git
