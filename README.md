@@ -4,6 +4,8 @@
 
 Holy Unblocker bundle for deployment on single server productions and IDEs (Replit, Heroku, etc...)
 
+[![Run on Repl.it](https://repl.it/badge/github/e9x/website-aio)](https://repl.it/github/e9x/website-aio)
+
 ### Table of Contents
 
 1. [Setup](#setup)
