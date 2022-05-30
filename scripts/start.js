@@ -5,6 +5,7 @@ import { fork } from 'node:child_process';
 import { createServer } from 'node:net';
 import { join } from 'node:path';
 
+import address from 'address';
 import chalk from 'chalk';
 import express from 'express';
 import proxy from 'express-http-proxy';
@@ -128,8 +129,34 @@ try {
 	port = newPort;
 }
 
+const urls = {};
+
+urls.localUrlForTerminal = `http://${hostname}:${chalk.bold(port)}`;
+urls.localUrlForConfig = `http://${hostname}:${port}`;
+
+if ('REPL_SLUG' in process.env) {
+	urls.replUrlForTerminal = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+	urls.replUrlForConfig = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+}
+
+try {
+	urls.lanUrlForTerminal = `http://${address.ip()}:${chalk.bold(port)}`;
+	urls.lanUrlForConfig = `http://${address.ip()}:${port}`;
+	// eslint-disable-next-line no-empty
+} catch (_error) {}
+
 server.listen(port, hostname, () => {
 	clearConsole();
 	console.log(`You can now view ${chalk.bold(appName)} in the browser.\n`);
-	console.log(`  ${chalk.bold('Listening on:')} ${hostname}:${port}\n`);
+	console.log(
+		[
+			`  ${chalk.bold('Local:')}            ${urls.localUrlForTerminal}\n`,
+			urls.lanUrlForTerminal &&
+				`  ${chalk.bold('On Your Network:')}  ${urls.lanUrlForTerminal}\n`,
+			urls.replUrlForTerminal &&
+				`  ${chalk.bold('Replit:')}           ${urls.replUrlForTerminal}\n`,
+		]
+			.filter(Boolean)
+			.join('')
+	);
 });
