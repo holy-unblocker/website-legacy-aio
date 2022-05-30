@@ -60,6 +60,7 @@ async function createPort(hostname) {
 const barePort = await createPort();
 
 fork(join(bare_server, 'app.js'), {
+	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		PORT: barePort,
 	},
@@ -70,6 +71,7 @@ const rhCrossDomainPort = await createPort();
 
 fork(join(rammerhead, 'src', 'server', 'index.js'), {
 	cwd: rammerhead,
+	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		PORT: rhPort,
 		CROSS_DOMAIN_PORT: rhCrossDomainPort,
