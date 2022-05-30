@@ -95,13 +95,16 @@ for (let url of [
 		url,
 		proxy(`http://127.0.0.1:${rhPort}`, {
 			proxyReqPathResolver: req => req.originalUrl,
+			userResHeaderDecorator(headers, req) {
+				headers['x-forwarded-for'] = ;
+			},
 		})
 	);
 }
 
 server.use(express.static(website_build));
-const port = process.env.PORT || 80;
-const address = process.env.ADDRESS || '127.0.0.1';
+const port = process.env.PORT;
+const address = process.env.ADDRESS;
 
 server.listen(port, address, error => {
 	if (error) {
