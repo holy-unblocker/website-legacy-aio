@@ -1,4 +1,4 @@
-import '../config/prod.js';
+import '../util/prod.js';
 import '../config/env.js';
 
 import chalk from 'chalk';
