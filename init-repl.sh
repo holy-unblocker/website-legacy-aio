@@ -27,4 +27,4 @@ cd $repo
 source ./node-env.sh
 
 npm install
-npm run install-submodules
+npm run submodules
