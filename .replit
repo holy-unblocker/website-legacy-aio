@@ -1,4 +1,4 @@
-run = ["npm", "start"]
+run = ["start-repl.sh"]
 
 [packager]
 language = "nodejs-npm"
