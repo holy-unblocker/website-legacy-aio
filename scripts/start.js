@@ -1,16 +1,24 @@
-import '../config/prod.js';
+import '../util/prod.js';
 import '../config/env.js';
-import {
-	theatre,
-	website_build,
-	bare_server,
-	rammerhead,
-} from '../config/paths.js';
+
+import { fork } from 'node:child_process';
+import { createServer } from 'node:net';
+import { join } from 'node:path';
+
+import chalk from 'chalk';
 import express from 'express';
 import proxy from 'express-http-proxy';
-import { createServer } from 'node:net';
-import { fork } from 'node:child_process';
-import { join } from 'node:path';
+
+import appName from '../config/appName.js';
+import {
+	bare_server,
+	rammerhead,
+	theatre,
+	website_build,
+} from '../config/paths.js';
+import clearConsole from '../util/clearConsole.js';
+
+console.log(`${chalk.cyan('Starting the server...')}\n`);
 
 const server = express();
 
@@ -109,11 +117,17 @@ try {
 } catch (error) {
 	const newPort = await createPort(hostname);
 	console.error(
-		`${hostname}:${port} is already in use. Binding to ${hostname}:${newPort} instead.`
+		`${chalk.yellow(
+			chalk.bold(
+				`Address ${hostname}:${port} cannot be used. Binding to ${hostname}:${newPort} instead.`
+			)
+		)}\n`
 	);
 	port = newPort;
 }
 
 server.listen(port, hostname, () => {
-	console.log(`Listening on ${hostname}:${port}`);
+	clearConsole();
+	console.log(`You can now view ${chalk.bold(appName)} in the browser.\n`);
+	console.log(`  ${chalk.bold('Listening on:')} ${hostname}:${port}\n`);
 });

@@ -1,6 +1,8 @@
 import chalk from 'chalk';
-import { website, rammerhead, bare_server } from '../config/paths.js';
-import { spawnAsync } from '../config/util.js';
+
+import appName from '../config/appName.js';
+import { bare_server, rammerhead, website } from '../config/paths.js';
+import spawnAsync from '../config/spawnAsync.js';
 
 await spawnAsync('npm', ['install'], {
 	stdio: 'inherit',
@@ -21,7 +23,7 @@ console.log();
 console.log(chalk.green('Modules installed successfully.'));
 console.log();
 
-console.log(`You can now build ${chalk.bold('website-aio')}:`);
+console.log(`You can now build ${chalk.bold(appName)}:`);
 console.log();
 
 console.log(`  ${chalk.cyan('npm')} run build`);

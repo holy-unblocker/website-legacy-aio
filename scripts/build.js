@@ -1,8 +1,11 @@
 import '../config/prod.js';
 import '../config/env.js';
-import { rammerhead, website } from '../config/paths.js';
-import { spawnAsync } from '../config/util.js';
+
 import chalk from 'chalk';
+
+import appName from '../config/appName.js';
+import { rammerhead, website } from '../config/paths.js';
+import spawnAsync from '../config/spawnAsync.js';
 
 await spawnAsync('npm', ['run', 'build'], {
 	stdio: 'inherit',
@@ -20,7 +23,7 @@ console.log();
 console.log(chalk.green('Built successfully.'));
 console.log();
 
-console.log(`You can now start ${chalk.bold('website-aio')}:`);
+console.log(`You can now start ${chalk.bold(appName)}:`);
 console.log();
 
 console.log(`  ${chalk.cyan('npm')} start`);
