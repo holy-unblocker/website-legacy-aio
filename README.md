@@ -20,6 +20,12 @@ To setup this repository (after cloning into an IDE), you must run the init scri
 
 > This process may take up to 10 minutes.
 
+## Install
+
+```
+npm install
+```
+
 ## Build
 
 Once this repository is setup, you can run the build script in order to compile the website's source code and Rammerhead's client.
