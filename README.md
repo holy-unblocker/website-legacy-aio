@@ -28,6 +28,7 @@ To setup this repository (after cloning into an IDE), you must run the init scri
 Install dependencies.
 
 ```sh
+> npm install submodules
 > npm install
 ```
 
