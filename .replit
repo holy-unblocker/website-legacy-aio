@@ -1,5 +1,5 @@
-# run = ["npm", "start"]
-run = "echo Repl.it wants to run"
+language = "bash"
+run = ["npm", "start"]
 
 [packager]
 language = "nodejs-npm"
