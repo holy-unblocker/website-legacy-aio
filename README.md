@@ -24,9 +24,13 @@ To setup this repository (after cloning into an IDE), you must run the init scri
 
 ## Install
 
+Install dependencies.
+
+```sh
+> npm install
 ```
-npm install
-```
+
+> This process may take up to 10 minutes.
 
 ## Build
 
