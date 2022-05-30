@@ -24,7 +24,7 @@ cd node_modules/node/bin
 	npm i npm@8
 cd $repo
 
-source ./node-env.sh
+source ./env.sh
 
 npm install
 npm run submodules
