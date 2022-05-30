@@ -95,9 +95,6 @@ for (let url of [
 		url,
 		proxy(`http://127.0.0.1:${rhPort}`, {
 			proxyReqPathResolver: req => req.originalUrl,
-			userResHeaderDecorator(headers, req) {
-				headers['x-forwarded-for'] = ;
-			},
 		})
 	);
 }
