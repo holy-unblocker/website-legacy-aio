@@ -77,6 +77,10 @@ server.use(
 	})
 );
 
+const rammerhead_proxy = proxy(`http://127.0.0.1:${rhPort}`, {
+	proxyReqPathResolver: req => req.originalUrl,
+});
+
 for (let url of [
 	'/([a-z0-9]{32})*',
 	'/rammerhead.js',
@@ -91,12 +95,7 @@ for (let url of [
 	'/syncLocalStorage',
 	'/api/shuffleDict',
 ]) {
-	server.use(
-		url,
-		proxy(`http://127.0.0.1:${rhPort}`, {
-			proxyReqPathResolver: req => req.originalUrl,
-		})
-	);
+	server.use(url, rammerhead_proxy);
 }
 
 server.use(express.static(website_build));
