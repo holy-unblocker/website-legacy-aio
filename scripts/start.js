@@ -78,7 +78,8 @@ server.use(
 );
 
 const rammerhead_proxy = proxy(`http://127.0.0.1:${rhPort}`, {
-	proxyReqPathResolver: req => req.originalUrl,
+	proxyReqPathResolver: req =>
+		req.originalUrl.replace(/^\/[a-z0-9]{32}\/\w+:\/(?!\/)/, '$&/'),
 });
 
 for (let url of [
