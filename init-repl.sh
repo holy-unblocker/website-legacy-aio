@@ -17,7 +17,7 @@ cd website
 cd ..
 
 npm install --save-dev node@17
-npm config set prefix=$(repo)/node_modules/node
+npm config set prefix=$repo/node_modules/node
 
 cd node_modules/node/bin
 	echo "{}" > ./package.json
