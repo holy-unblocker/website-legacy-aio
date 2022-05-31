@@ -1,10 +1,10 @@
-import { realpathSync } from 'node:fs';
+import { access, realpath } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { cwd } from 'node:process';
 
-const appDirectory = realpathSync(cwd());
+const appDirectory = await realpath(cwd());
 
-function resolveApp(relativePath) {
+export function resolveApp(relativePath) {
 	return resolve(appDirectory, relativePath);
 }
 
@@ -16,3 +16,16 @@ export const db_server = resolveApp('db-server');
 export const theatre = resolveApp('theatre');
 export const rammerhead = resolveApp('rammerhead');
 export const bare_server = resolveApp('bare-server-node');
+
+let _isRepo;
+try {
+	await access(resolveApp('.git'));
+	_isRepo = true;
+} catch (error) {
+	if (error !== 'ENOENT') {
+		throw error;
+	}
+	_isRepo = false;
+}
+
+export const isRepo = _isRepo;

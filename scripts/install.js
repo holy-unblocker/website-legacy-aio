@@ -1,28 +1,84 @@
-import { open } from 'node:fs/promises';
+import { access } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import chalk from 'chalk';
 
 import appName from '../config/appName.js';
-import { bare_server, rammerhead, website } from '../config/paths.js';
+import { bare_server, isRepo, rammerhead, website } from '../config/paths.js';
 import spawnAsync from '../config/spawnAsync.js';
 
 // no package = install parent dir (run this script again) = infinite loop
-async function testSubmodule(dir, sm) {
+async function testSubmodule(dir, name, repo, sslVerify = true) {
 	try {
-		await open(join(dir, 'package.json'));
+		await access(join(dir, 'package.json'));
 	} catch (error) {
 		if (error.code === 'ENOENT') {
-			throw new Error(`Submodules were not updated and cloned. (${sm})`);
-		}
+			if (isRepo)
+				try {
+					await access(dir);
 
-		throw error;
+					// dir exists but no package.json
+					// not initialized
+					console.warn(`Submodule ${chalk.bold(name)} was not initialized.`);
+
+					await spawnAsync('git', ['submodule', 'update', '--init', name], {
+						stdio: 'inherit',
+					});
+
+					return;
+				} catch (error) {
+					if (error.code !== 'ENOENT') {
+						throw error;
+					}
+				}
+
+			console.warn(`Submodule ${chalk.bold(name)} was not cloned\n`);
+			console.log('Cloning submodule...\n');
+
+			await spawnAsync(
+				'git',
+				[
+					...(!sslVerify ? ['-c', 'http.sslVerify=false'] : []),
+					'clone',
+					repo,
+					name,
+					'--depth',
+					'1',
+				],
+				{
+					stdio: 'inherit',
+				}
+			);
+
+			console.log('Disabling SSL verify');
+
+			if (!sslVerify) {
+				await spawnAsync('git', ['config', 'http.sslVerify', 'false'], {
+					stdio: 'inherit',
+				});
+			}
+		}
 	}
 }
 
-await testSubmodule(website, 'website-aio-fork');
-await testSubmodule(rammerhead, 'rammerhead-fork-aio');
-await testSubmodule(bare_server, 'bare-server-node');
+await testSubmodule(
+	website,
+	'website',
+	'https://git.holy.how/holy/website-fork-aio.git',
+	false
+);
+
+await testSubmodule(
+	rammerhead,
+	'rammerhead',
+	'https://github.com/e9x/rammerhead-fork-aio.git'
+);
+
+await testSubmodule(
+	bare_server,
+	'bare-server-node',
+	'https://github.com/tomphttp/bare-server-node'
+);
 
 await spawnAsync('npm', ['install'], {
 	stdio: 'inherit',
