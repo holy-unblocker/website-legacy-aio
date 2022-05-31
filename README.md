@@ -4,7 +4,9 @@
 
 Holy Unblocker bundle for deployment on single server productions and IDEs (Replit, Heroku, etc...)
 
-[![Run on Repl.it](https://repl.it/badge/github/e9x/website-aio)](https://repl.it/github/e9x/website-aio)
+[![Deploy to Heroku](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/e9x/website-aio)
+[![Run on Replit](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/replit.svg)](https://replit.com/github/e9x/website-aio)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Ftitaniumnetwork-dev%2FHoly-Unblocker)
 
 ### Table of Contents
 
