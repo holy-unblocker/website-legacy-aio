@@ -22,7 +22,7 @@ try {
 	await access(resolveApp('.git'));
 	_isRepo = true;
 } catch (error) {
-	if (error !== 'ENOENT') {
+	if (error.code !== 'ENOENT') {
 		throw error;
 	}
 	_isRepo = false;
