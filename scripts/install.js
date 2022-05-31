@@ -32,8 +32,8 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 					}
 				}
 
-			console.warn(`Submodule ${chalk.bold(name)} was not cloned\n`);
-			console.log('Cloning submodule...\n');
+			console.warn(`Module ${chalk.bold(name)} was not cloned\n`);
+			console.log('Cloning module...\n');
 
 			await spawnAsync(
 				'git',
@@ -55,6 +55,7 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 			if (!sslVerify) {
 				await spawnAsync('git', ['config', 'http.sslVerify', 'false'], {
 					stdio: 'inherit',
+					cwd: dir,
 				});
 			}
 		}
