@@ -1,4 +1,3 @@
-language = "bash"
 run = ["npm", "start"]
 
 [packager]
