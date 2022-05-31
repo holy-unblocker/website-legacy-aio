@@ -50,9 +50,9 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 				}
 			);
 
-			console.log('Disabling SSL verify');
-
 			if (!sslVerify) {
+				console.log('Disabling SSL verification\n');
+
 				await spawnAsync('git', ['config', 'http.sslVerify', 'false'], {
 					stdio: 'inherit',
 					cwd: dir,
