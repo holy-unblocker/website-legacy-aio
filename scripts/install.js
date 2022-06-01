@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises';
+import { access, rmdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import chalk from 'chalk';
@@ -33,6 +33,8 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 								name
 							)}, falling back to cloning\n`
 						);
+
+						await rmdir(dir);
 					}
 				} catch (error) {
 					if (error.code !== 'ENOENT') {
