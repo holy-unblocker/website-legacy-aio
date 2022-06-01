@@ -1,46 +1,30 @@
 # website-aio
 
-> If you're seeing "Detecting language" on Replit, refresh!
+### Who this repository is for
 
-Holy Unblocker bundle for deployment on single server productions and IDEs (Replit, Heroku, etc...)
+This repository is for people looking for a convenient way to deploy Holy Unblocker.
 
-**Deployment:**
+The frontend [website repository](https://git.holy.how/holy/website) can run without other scripts being installed, however functionality will be limited. We configured all scripts to run [locally](#compromises)
+
+### Compromises
+
+Because the common build environments we worked with have very limited storage, we had to trim down the size of this repository and its submodules.
+
+- Only the latest commits in submodules are kept (`--depth 1`)
+- Theatre files (games, apps) are hosted on GitHub's CDN
+- Our official db-server instance is being proxied to allow redeeming vouchers and fetching the latest theatre data
+
+### Dependencies
+
+These scripts are already setup when you deploy an instance.
+
+- [DB server](https://git.holy.how/holy/db-server)
+- [Theatre](https://git.holy.how/holy/theatre)
+- [Bare Server Node](https://github.com/tomphttp/bare-server-node)
+- [Rammerhead](https://github.com/binary-person/rammerhead)
+
+### Deployment
 
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/e9x/website-aio)
 [![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://replit.com/github/e9x/website-aio)
 [![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/remade/railway.svg)](https://railway.app/new/template?template=https://github.com/e9x/website-aio)
-
-### Table of Contents
-
-1. [Install](#install)
-2. [Build](#build)
-3. [Start](#start)
-
-## Install
-
-Install dependencies.
-
-```sh
-> npm install submodules
-> npm install
-```
-
-> This process may take up to 10 minutes.
-
-## Build
-
-Once this repository is setup, you can run the build script in order to compile the website's source code and Rammerhead's client.
-
-```sh
-> npm run build
-```
-
-> This process may take up to 10 minutes.
-
-## Start
-
-Once this repository is built, you can select the "Run" button on Replit or run:
-
-```sh
-> npm start
-```
