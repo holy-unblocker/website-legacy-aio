@@ -13,7 +13,7 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 		await access(join(dir, 'package.json'));
 	} catch (error) {
 		if (error.code === 'ENOENT') {
-			if (isRepo)
+			if (isRepo) {
 				try {
 					await access(dir);
 
@@ -21,18 +21,28 @@ async function testSubmodule(dir, name, repo, sslVerify = true) {
 					// not initialized
 					console.warn(`Submodule ${chalk.bold(name)} was not initialized.`);
 
-					await spawnAsync('git', ['submodule', 'update', '--init', name], {
-						stdio: 'inherit',
-					});
+					try {
+						await spawnAsync('git', ['submodule', 'update', '--init', name], {
+							stdio: 'inherit',
+						});
 
-					return;
+						return;
+					} catch (error) {
+						console.error(
+							`Failure initializing ${chalk.bold(
+								name
+							)}, falling back to cloning\n`
+						);
+					}
 				} catch (error) {
 					if (error.code !== 'ENOENT') {
 						throw error;
 					}
 				}
+			} else {
+				console.warn(`Module ${chalk.bold(name)} was not cloned\n`);
+			}
 
-			console.warn(`Module ${chalk.bold(name)} was not cloned\n`);
 			console.log('Cloning module...\n');
 
 			await spawnAsync(

@@ -10,20 +10,9 @@ Holy Unblocker bundle for deployment on single server productions and IDEs (Repl
 
 ### Table of Contents
 
-1. [Setup](#setup)
-2. [Install](#install)
-3. [Build](#build)
-4. [Start](#start)
-
-## Setup
-
-To setup this repository (after cloning into an IDE), you must run the init script. This will update and checkout all submodules.
-
-```sh
-> ./init.sh
-```
-
-> This process may take up to 10 minutes.
+1. [Install](#install)
+2. [Build](#build)
+3. [Start](#start)
 
 ## Install
 
