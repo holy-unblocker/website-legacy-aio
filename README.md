@@ -28,3 +28,5 @@ These scripts are already setup when you deploy an instance.
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/e9x/website-aio)
 [![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://replit.com/github/e9x/website-aio)
 [![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/remade/railway.svg)](https://railway.app/new/template?template=https://github.com/e9x/website-aio)
+
+If you are deploying to an alternative service **OR REPLIT**, please refer to the [wiki](https://github.com/e9x/website-aio/wiki) before [opening an issue](https://github.com/e9x/website-aio/issues).
