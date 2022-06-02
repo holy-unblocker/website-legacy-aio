@@ -23,7 +23,7 @@
 	"dependencies": {
 		"address": "^1.2.0",
 		"chalk": "^5.0.1",
-		"cookie-parser": "^1.4.6",
+		"cookie": "^0.5.0",
 		"dotenv": "^16.0.1",
 		"dotenv-expand": "^8.0.3",
 		"express": "^4.18.1",

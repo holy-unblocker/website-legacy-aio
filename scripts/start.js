@@ -7,7 +7,7 @@ import { join } from 'node:path';
 
 import address from 'address';
 import chalk from 'chalk';
-import cookieParser from 'cookie-parser';
+import cookie from 'cookie';
 import express from 'express';
 import proxy from 'express-http-proxy';
 
@@ -96,13 +96,15 @@ const rammerhead_proxy = proxy(`http://127.0.0.1:${rhPort}`, {
 
 const rammerhead_session = '/([a-z0-9]{32})*';
 
-server.use(rammerhead_session, cookieParser());
-
 server.use(rammerhead_session, (req, res, next) => {
-	if (!('auth_proxy' in req.cookies)) {
-		res.status(403);
-		res.send('Forbidden');
-		return;
+	if (req.headers['sec-fetch-mode'] === 'navigate') {
+		const cookies = cookie.parse(req.headers.cookie || '');
+
+		if (!('auth_proxy' in cookies)) {
+			res.status(401);
+			res.send('Forbidden');
+			return;
+		}
 	}
 
 	next();
