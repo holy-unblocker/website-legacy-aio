@@ -102,7 +102,7 @@ server.use(rammerhead_session, (req, res, next) => {
 
 		if (!('auth_proxy' in cookies)) {
 			res.status(401);
-			res.send('Forbidden');
+			res.send('Unauthorized');
 			return;
 		}
 	}
