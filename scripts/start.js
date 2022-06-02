@@ -91,7 +91,7 @@ server.use(
 
 const rammerhead_proxy = proxy(`http://127.0.0.1:${rhPort}`, {
 	proxyReqPathResolver: req =>
-		req.originalUrl.replace(/^\/[a-z0-9]{32}\/\w+:\/(?!\/)/, '$&/'),
+		req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
 });
 
 const rammerhead_session = '/([a-z0-9]{32})*';
@@ -130,7 +130,15 @@ for (let url of [
 	server.use(url, rammerhead_proxy);
 }
 
-server.use(express.static(website_build));
+server.use(express.static(website_build, { fallthrough: false }));
+
+server.use((error, req, res, next) => {
+	if (error.statusCode === 404) {
+		return res.sendFile(join(website_build, '404.html'));
+	}
+
+	next();
+});
 
 let port = process.env.PORT || 80;
 const hostname = process.env.hostname || '0.0.0.0';
