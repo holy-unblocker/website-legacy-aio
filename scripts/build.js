@@ -1,3 +1,4 @@
+import './submodules.js';
 import '../util/prod.js';
 import '../config/env.js';
 
