@@ -96,16 +96,19 @@ await testSubmodule(
 await spawnAsync('npm', ['install', '--omit=dev'], {
 	stdio: 'inherit',
 	cwd: website,
+	shell: true,
 });
 
 await spawnAsync('npm', ['install'], {
 	stdio: 'inherit',
 	cwd: rammerhead,
+	shell: true,
 });
 
 await spawnAsync('npm', ['install'], {
 	stdio: 'inherit',
 	cwd: bare_server,
+	shell: true,
 });
 
 console.log();
