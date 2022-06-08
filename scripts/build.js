@@ -10,13 +10,11 @@ import spawnAsync from '../config/spawnAsync.js';
 await spawnAsync('npm', ['run', 'build'], {
 	stdio: 'inherit',
 	cwd: website,
-	env: process.env,
 });
 
 await spawnAsync('npm', ['run', 'build'], {
 	stdio: 'inherit',
 	cwd: rammerhead,
-	env: process.env,
 });
 
 console.log();

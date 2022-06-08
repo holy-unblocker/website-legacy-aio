@@ -93,7 +93,7 @@ await testSubmodule(
 	'https://github.com/tomphttp/bare-server-node'
 );
 
-await spawnAsync('npm', ['install', '--omnit=dev'], {
+await spawnAsync('npm', ['install', '--omit=dev'], {
 	stdio: 'inherit',
 	cwd: website,
 });
