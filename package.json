@@ -12,7 +12,7 @@
 		"build": "node scripts/build.js",
 		"start": "node scripts/start.js",
 		"install": "node scripts/install.js",
-		"prepare": "husky install"
+		"prepare": "node scripts/prepare.js"
 	},
 	"author": "",
 	"type": "module",
@@ -30,6 +30,7 @@
 		"express-http-proxy": "^1.6.3"
 	},
 	"devDependencies": {
+		"eslint": "^8.17.0",
 		"eslint-config-prettier": "^8.5.0",
 		"husky": "^8.0.1",
 		"import-sort-style-module": "^6.0.0",
