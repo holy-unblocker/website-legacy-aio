@@ -8,5 +8,5 @@
 	shallow = true
 [submodule "rammerhead-fork-aio"]
 	path = rammerhead
-	url = https://github.com/e9x/rammerhead-fork-aio.git
+	url = https://github.com/holy-unblocker/rammerhead-fork-aio.git
 	shallow = true
