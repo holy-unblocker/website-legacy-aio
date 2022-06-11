@@ -25,10 +25,10 @@ These scripts are already setup when you deploy an instance.
 
 ### Deployment
 
-[![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://github.com/e9x/website-aio/wiki/Deploy-to-Heroku)
-[![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://github.com/e9x/website-aio/wiki/Deploy-to-Replit)
-[![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/remade/railway.svg)](https://railway.app/new/template?template=https://github.com/e9x/website-aio)
+[![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://github.com/holy-unblocker/website-aio/wiki/Deploy-to-Heroku)
+[![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://github.com/holy-unblocker/website-aio/wiki/Deploy-to-Replit)
+[![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/remade/railway.svg)](https://github.com/holy-unblocker/website-aio/wiki/Deploy-to-Railway)
 
-If you are deploying to an alternative service, please refer to the [wiki](https://github.com/e9x/website-aio/wiki).
+If you are deploying to an alternative service, please refer to the [wiki](https://github.com/holy-unblocker/website-aio/wiki).
 
 If you need help deploying, open a ticket in our [Discord server](https://discord.gg/gvenmHBZsQ).
