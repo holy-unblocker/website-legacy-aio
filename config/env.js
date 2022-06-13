@@ -1,5 +1,3 @@
-'use strict';
-
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
 
@@ -28,7 +26,7 @@ const dotenvFiles = [
 // that have already been set.  Variable expansion is supported in .env files.
 // https://github.com/motdotla/dotenv
 // https://github.com/motdotla/dotenv-expand
-for (let dotenvFile of dotenvFiles) {
+for (const dotenvFile of dotenvFiles) {
 	try {
 		expand(
 			config({

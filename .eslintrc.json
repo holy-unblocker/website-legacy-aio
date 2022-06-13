@@ -7,5 +7,13 @@
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"sourceType": "module"
+	},
+	"rules": {
+		"no-unused-vars": "error",
+		"no-constant-condition": ["error", { "checkLoops": false }],
+		"no-lone-blocks": "off",
+		"quotes": "off",
+		"eqeqeq": "error",
+		"prefer-const": "error"
 	}
 }

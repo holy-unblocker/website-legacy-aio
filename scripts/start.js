@@ -110,7 +110,7 @@ server.use(rammerhead_session, (req, res, next) => {
 	next();
 });
 
-for (let url of [
+for (const url of [
 	rammerhead_session,
 	'/rammerhead.js',
 	'/hammerhead.js',
@@ -159,7 +159,9 @@ try {
 
 const urls = {};
 
-urls.localUrlForTerminal = `http://${hostname}:${chalk.bold(port)}`;
+urls.urls.localUrlForTerminal = `http://${
+	hostname === '0.0.0.0' ? 'localhost' : hostname
+}:${chalk.bold(port)}`;
 urls.localUrlForConfig = `http://${hostname}:${port}`;
 
 if ('REPL_SLUG' in process.env) {
