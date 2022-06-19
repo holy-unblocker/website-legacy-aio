@@ -153,7 +153,7 @@ try {
 
 const urls = {};
 
-urls.urls.localUrlForTerminal = `http://${
+urls.localUrlForTerminal = `http://${
 	hostname === '0.0.0.0' ? 'localhost' : hostname
 }:${chalk.bold(port)}`;
 urls.localUrlForConfig = `http://${hostname}:${port}`;
