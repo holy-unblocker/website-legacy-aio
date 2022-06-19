@@ -12,12 +12,7 @@ import express from 'express';
 import proxy from 'express-http-proxy';
 
 import appName from '../config/appName.js';
-import {
-	bare_server,
-	rammerhead,
-	theatre,
-	website_build,
-} from '../config/paths.js';
+import { bare_server, rammerhead, website_build } from '../config/paths.js';
 import clearConsole from '../util/clearConsole.js';
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
@@ -80,7 +75,6 @@ fork(join(rammerhead, 'src', 'server', 'index.js'), {
 	},
 });
 
-server.use('/theatre', express.static(join(theatre, 'public')));
 server.use('/api/bare', proxy(`http://localhost:${barePort}`));
 server.use(
 	'/api/db',
