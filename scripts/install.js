@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import chalk from 'chalk';
 
 import appName from '../config/appName.js';
-import { bare_server, isRepo, rammerhead, website } from '../config/paths.js';
+import { isRepo, rammerhead, website } from '../config/paths.js';
 import spawnAsync from '../config/spawnAsync.js';
 
 // no package = install parent dir (run this script again) = infinite loop
@@ -87,12 +87,6 @@ await testSubmodule(
 	'https://github.com/e9x/rammerhead-fork-aio.git'
 );
 
-await testSubmodule(
-	bare_server,
-	'bare-server-node',
-	'https://github.com/tomphttp/bare-server-node'
-);
-
 await spawnAsync('npm', ['install', '--omit=dev'], {
 	stdio: 'inherit',
 	cwd: website,
@@ -102,12 +96,6 @@ await spawnAsync('npm', ['install', '--omit=dev'], {
 await spawnAsync('npm', ['install'], {
 	stdio: 'inherit',
 	cwd: rammerhead,
-	shell: true,
-});
-
-await spawnAsync('npm', ['install'], {
-	stdio: 'inherit',
-	cwd: bare_server,
 	shell: true,
 });
 

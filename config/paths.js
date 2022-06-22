@@ -13,7 +13,6 @@ export const appPackageJson = resolveApp('package.json');
 export const website = resolveApp('website');
 export const website_build = resolveApp('website/build');
 export const rammerhead = resolveApp('rammerhead');
-export const bare_server = resolveApp('bare-server-node');
 
 let _isRepo;
 try {

@@ -1,7 +1,3 @@
-[submodule "bare-server-node"]
-	path = bare-server-node
-	url = https://github.com/tomphttp/bare-server-node
-	shallow = true
 [submodule "website-fork-aio"]
 	path = website
 	url = https://git.holy.how/holy/website-fork-aio.git

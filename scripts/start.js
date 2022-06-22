@@ -1,7 +1,7 @@
 import '../util/prod.js';
 import '../config/env.js';
 
-import { fork } from 'node:child_process';
+import { fork, spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { join } from 'node:path';
 
@@ -12,7 +12,7 @@ import express from 'express';
 import proxy from 'express-http-proxy';
 
 import appName from '../config/appName.js';
-import { bare_server, rammerhead, website_build } from '../config/paths.js';
+import { rammerhead, website_build } from '../config/paths.js';
 import clearConsole from '../util/clearConsole.js';
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
@@ -56,9 +56,10 @@ async function createPort(hostname) {
 
 const barePort = await createPort();
 
-fork(join(bare_server, 'app.js'), {
+spawn('npx', ['bare-server-node'], {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
+		...process.env,
 		PORT: barePort,
 	},
 });
