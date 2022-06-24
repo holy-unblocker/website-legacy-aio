@@ -1,19 +1,16 @@
 import '../util/prod.js';
 import '../config/env.js';
-
-import { fork, spawn } from 'node:child_process';
-import { createServer } from 'node:net';
-import { join } from 'node:path';
-
+import appName from '../config/appName.js';
+import { rammerhead, website_build } from '../config/paths.js';
+import clearConsole from '../util/clearConsole.js';
 import address from 'address';
 import chalk from 'chalk';
 import cookie from 'cookie';
 import express from 'express';
 import proxy from 'express-http-proxy';
-
-import appName from '../config/appName.js';
-import { rammerhead, website_build } from '../config/paths.js';
-import clearConsole from '../util/clearConsole.js';
+import { fork, spawn } from 'node:child_process';
+import { createServer } from 'node:net';
+import { join } from 'node:path';
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
 
@@ -23,7 +20,7 @@ function tryBind(port, hostname) {
 	return new Promise((resolve, reject) => {
 		const server = createServer();
 
-		server.on('error', error => {
+		server.on('error', (error) => {
 			reject(error);
 		});
 
@@ -80,12 +77,12 @@ server.use('/api/bare', proxy(`http://localhost:${barePort}`));
 server.use(
 	'/api/db',
 	proxy(`https://static.holy.how/`, {
-		proxyReqPathResolver: req => `/db/${req.url}`,
+		proxyReqPathResolver: (req) => `/db/${req.url}`,
 	})
 );
 
 const rammerhead_proxy = proxy(`http://127.0.0.1:${rhPort}`, {
-	proxyReqPathResolver: req =>
+	proxyReqPathResolver: (req) =>
 		req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
 });
 

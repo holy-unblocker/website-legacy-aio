@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 export default function spawnAsync(...args) {
 	return new Promise((resolve, reject) => {
 		const process = spawn(...args);
-		process.on('exit', code => {
+		process.on('exit', (code) => {
 			if (code === 0) {
 				resolve(code);
 			} else {

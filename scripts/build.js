@@ -1,11 +1,9 @@
 import '../util/prod.js';
 import '../config/env.js';
-
-import chalk from 'chalk';
-
 import appName from '../config/appName.js';
 import { rammerhead, website } from '../config/paths.js';
 import spawnAsync from '../config/spawnAsync.js';
+import chalk from 'chalk';
 
 await spawnAsync('npm', ['run', 'build'], {
 	stdio: 'inherit',

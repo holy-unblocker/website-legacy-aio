@@ -1,11 +1,9 @@
-import { access, rmdir } from 'node:fs/promises';
-import { join } from 'node:path';
-
-import chalk from 'chalk';
-
 import appName from '../config/appName.js';
 import { isRepo, rammerhead, website } from '../config/paths.js';
 import spawnAsync from '../config/spawnAsync.js';
+import chalk from 'chalk';
+import { access, rmdir } from 'node:fs/promises';
+import { join } from 'node:path';
 
 // no package = install parent dir (run this script again) = infinite loop
 async function testSubmodule(dir, name, repo, sslVerify = true) {

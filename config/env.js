@@ -1,7 +1,6 @@
+import { dotenv } from './paths.js';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
-
-import { dotenv } from './paths.js';
 
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {

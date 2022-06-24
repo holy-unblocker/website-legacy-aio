@@ -1,6 +1,4 @@
 {
 	"useTabs": true,
-	"arrowParens": "avoid",
-	"singleQuote": true,
-	"plugins": ["prettier-plugin-organize-imports"]
+	"singleQuote": true
 }
