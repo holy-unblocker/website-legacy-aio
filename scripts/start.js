@@ -1,11 +1,16 @@
 import address from 'address';
 import chalk from 'chalk';
 import { spawn } from 'child_process';
+import { expand } from 'dotenv-expand';
+import { config } from 'dotenv-flow';
 import express from 'express';
 import proxy from 'express-http-proxy';
 import { createServer } from 'net';
 import { join } from 'path';
 import { websitePath } from 'website';
+
+// what a dotenv in a project like this serves: .env.local file containing developer port
+expand(config());
 
 function clearConsole() {
 	process.stdout.write(
