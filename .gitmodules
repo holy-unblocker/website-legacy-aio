@@ -1,0 +1,6 @@
+[submodule "website"]
+	path = website
+	url = https://git.holy.how/holy/website-fork-aio.git
+[submodule "rammerhead"]
+	path = rammerhead
+	url = https://github.com/holy-unblocker/rammerhead-fork-aio
