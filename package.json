@@ -27,8 +27,7 @@
 		"dotenv-flow": "^3.2.0",
 		"express": "^4.18.1",
 		"express-http-proxy": "^1.6.3",
-		"rammerhead": "github:holy-unblocker/rammerhead-fork-aio",
-		"website": "git+https://git.holy.how/holy/website-fork-aio.git"
+		"rimraf": "^3.0.2"
 	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^3.4.2",

@@ -19,6 +19,6 @@ export function spawnAsync(...args) {
 	});
 }
 
-export const website = resolve('node_modules', 'website');
+export const website = resolve('website');
 export const websiteBuild = resolve(website, 'build');
-export const rammerhead = resolve('node_modules', 'rammerhead');
+export const rammerhead = resolve('rammerhead');
