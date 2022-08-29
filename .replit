@@ -2,3 +2,6 @@ run = ["npm", "start"]
 
 [packager]
 language = "nodejs-npm"
+
+[nix]
+channel = "stable-21_11"
