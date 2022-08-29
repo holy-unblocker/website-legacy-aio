@@ -1,11 +1,11 @@
-import { rammerhead, websiteBuild } from '../util.js';
 import address from 'address';
 import chalk from 'chalk';
+import { spawn } from 'child_process';
 import express from 'express';
 import proxy from 'express-http-proxy';
-import { fork, spawn } from 'node:child_process';
-import { createServer } from 'node:net';
-import { join } from 'node:path';
+import { createServer } from 'net';
+import { join } from 'path';
+import { websitePath } from 'website';
 
 function clearConsole() {
 	process.stdout.write(
@@ -65,10 +65,10 @@ spawn('npx', ['bare-server-node'], {
 const rhPort = await createPort();
 const rhCrossDomainPort = await createPort();
 
-fork(join(rammerhead, 'src', 'server', 'index.js'), {
-	cwd: rammerhead,
+spawn('npx', ['rammerhead'], {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
+		...process.env,
 		PORT: rhPort,
 		CROSS_DOMAIN_PORT: rhCrossDomainPort,
 	},
@@ -107,11 +107,11 @@ for (const url of [
 	server.use(url, rammerheadProxy);
 }
 
-server.use(express.static(websiteBuild, { fallthrough: false }));
+server.use(express.static(websitePath, { fallthrough: false }));
 
 server.use((error, req, res, next) => {
 	if (error.statusCode === 404)
-		return res.sendFile(join(websiteBuild, '404.html'));
+		return res.sendFile(join(websitePath, '404.html'));
 
 	next();
 });

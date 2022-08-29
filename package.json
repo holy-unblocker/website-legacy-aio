@@ -9,9 +9,7 @@
 		"url": "https://github.com/holy-unblocker/website-aio.git"
 	},
 	"scripts": {
-		"build": "NODE_ENV=production node scripts/build.js",
-		"start": "NODE_ENV=production node scripts/start.js",
-		"install": "node scripts/install.js"
+		"start": "NODE_ENV=production node scripts/start.js"
 	},
 	"author": "",
 	"type": "module",
@@ -23,11 +21,11 @@
 		"@tomphttp/bare-server-node": "^1.0.2-beta-rollup1",
 		"address": "^1.2.0",
 		"chalk": "^5.0.1",
-		"dotenv-expand": "^8.0.3",
-		"dotenv-flow": "^3.2.0",
 		"express": "^4.18.1",
 		"express-http-proxy": "^1.6.3",
-		"rimraf": "^3.0.2"
+		"rimraf": "^3.0.2",
+		"rammerhead": "https://git.holy.how/attachments/7017bba8-f92a-4849-9d37-24bf47e437cb",
+		"website": "https://git.holy.how/attachments/2abbcd38-05b9-42ba-a148-ffbbaaebf4ef"
 	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^3.4.2",
