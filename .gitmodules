@@ -1,8 +1,0 @@
-[submodule "website-fork-aio"]
-	path = website
-	url = https://git.holy.how/holy/website-fork-aio.git
-	shallow = true
-[submodule "rammerhead-fork-aio"]
-	path = rammerhead
-	url = https://github.com/holy-unblocker/rammerhead-fork-aio.git
-	shallow = true

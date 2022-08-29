@@ -1,28 +1,24 @@
-import { access, realpath } from 'node:fs/promises';
-import { resolve } from 'node:path';
-import { cwd } from 'node:process';
+import { spawn } from 'child_process';
+import { expand } from 'dotenv-expand';
+import { config } from 'dotenv-flow';
+import { resolve } from 'path';
 
-const appDirectory = await realpath(cwd());
+expand(config());
 
-export function resolveApp(relativePath) {
-	return resolve(appDirectory, relativePath);
+export function spawnAsync(...args) {
+	return new Promise((resolve, reject) => {
+		const process = spawn(...args);
+		process.on('exit', (code) => {
+			if (code === 0) {
+				resolve(code);
+			} else {
+				reject(code);
+			}
+		});
+		process.on('error', reject);
+	});
 }
 
-export const dotenv = resolveApp('.env');
-export const appPackageJson = resolveApp('package.json');
-export const website = resolveApp('website');
-export const website_build = resolveApp('website/build');
-export const rammerhead = resolveApp('rammerhead');
-
-let _isRepo;
-try {
-	await access(resolveApp('.git'));
-	_isRepo = true;
-} catch (error) {
-	if (error.code !== 'ENOENT') {
-		throw error;
-	}
-	_isRepo = false;
-}
-
-export const isRepo = _isRepo;
+export const website = resolve('node_modules', 'website');
+export const websiteBuild = resolve(website, 'build');
+export const rammerhead = resolve('node_modules', 'rammerhead');

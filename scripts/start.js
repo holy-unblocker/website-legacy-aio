@@ -1,8 +1,4 @@
-import '../util/prod.js';
-import '../config/env.js';
-import appName from '../config/appName.js';
-import { rammerhead, website_build } from '../config/paths.js';
-import clearConsole from '../util/clearConsole.js';
+import { rammerhead, websiteBuild } from '../util.js';
 import address from 'address';
 import chalk from 'chalk';
 import cookie from 'cookie';
@@ -11,6 +7,12 @@ import proxy from 'express-http-proxy';
 import { fork, spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { join } from 'node:path';
+
+function clearConsole() {
+	process.stdout.write(
+		process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
+	);
+}
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
 
@@ -122,12 +124,11 @@ for (const url of [
 	server.use(url, rammerhead_proxy);
 }
 
-server.use(express.static(website_build, { fallthrough: false }));
+server.use(express.static(websiteBuild, { fallthrough: false }));
 
 server.use((error, req, res, next) => {
-	if (error.statusCode === 404) {
-		return res.sendFile(join(website_build, '404.html'));
-	}
+	if (error.statusCode === 404)
+		return res.sendFile(join(websiteBuild, '404.html'));
 
 	next();
 });
@@ -169,7 +170,9 @@ try {
 
 server.listen(port, hostname, () => {
 	clearConsole();
-	console.log(`You can now view ${chalk.bold(appName)} in the browser.\n`);
+	console.log(
+		`You can now view ${chalk.bold('website-aio')} in the browser.\n`
+	);
 	console.log(
 		[
 			`  ${chalk.bold('Local:')}            ${urls.localUrlForTerminal}\n`,
