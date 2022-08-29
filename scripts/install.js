@@ -99,7 +99,7 @@ await testSubmodule(
 	'https://github.com/e9x/rammerhead-fork-aio.git'
 );
 
-await spawnAsync('npm', ['install'], {
+await spawnAsync('npm', ['install', '--include=dev'], {
 	stdio: 'inherit',
 	cwd: website,
 	shell: true,
