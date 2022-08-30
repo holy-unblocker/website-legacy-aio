@@ -16,6 +16,7 @@ The website repository can run without other scripts being installed, however yo
 
 These repositories are setup when you deploy an instance.
 
+- [Website](https://git.holy.how/holy/website)
 - [Theatre](https://git.holy.how/holy/theatre)
 - [DB server](https://git.holy.how/holy/db-server)
 - [Bare Server Node](https://github.com/tomphttp/bare-server-node)
