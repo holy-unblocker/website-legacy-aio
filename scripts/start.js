@@ -5,8 +5,8 @@ import { expand } from 'dotenv-expand';
 import { config } from 'dotenv-flow';
 import express from 'express';
 import proxy from 'express-http-proxy';
+import { createServer } from 'http';
 import { createRequire } from 'module';
-import { createServer } from 'net';
 import { join } from 'path';
 import { websitePath } from 'website';
 
@@ -15,18 +15,19 @@ const require = createRequire(import.meta.url);
 // what a dotenv in a project like this serves: .env.local file containing developer port
 expand(config());
 
-function clearConsole() {
-	process.stdout.write(
-		process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
-	);
-}
-
 console.log(`${chalk.cyan('Starting the server...')}\n`);
 
 const server = express();
 
-function tryBind(port, hostname) {
-	return new Promise((resolve, reject) => {
+// root <= 1024
+const portMin = 1025;
+const portMax = 65536;
+
+const randomPort = () => ~~(Math.random() * (portMax - portMin)) + portMin;
+
+const tryBind = (port) =>
+	new Promise((resolve, reject) => {
+		// http server.. net server, same thing!
 		const server = createServer();
 
 		server.on('error', (error) => {
@@ -37,30 +38,25 @@ function tryBind(port, hostname) {
 			server.close(() => resolve());
 		});
 
-		server.listen(port, hostname);
+		server.listen(port);
 	});
-}
 
-// root <= 1024
-const portMin = 1025;
-const portMax = 65536;
-
-async function createPort(hostname) {
-	for (let i = 0; i < 1000; i++) {
-		const port = ~~(Math.random() * (portMax - portMin)) + portMin;
+const findPort = async () => {
+	while (true) {
+		const port = randomPort();
 
 		try {
-			await tryBind(port, hostname);
+			await tryBind(port);
 			return port;
-		} catch (error) {
-			continue;
+		} catch (err) {
+			// try again
 		}
 	}
+};
 
-	throw new Error('Unable to find available port');
-}
-
-const barePort = await createPort();
+const rhPort = await findPort();
+const rhCrossDomainPort = await findPort();
+const barePort = await findPort();
 
 fork(require.resolve('@tomphttp/bare-server-node/scripts/cli.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
@@ -69,9 +65,6 @@ fork(require.resolve('@tomphttp/bare-server-node/scripts/cli.js'), {
 		PORT: barePort,
 	},
 });
-
-const rhPort = await createPort();
-const rhCrossDomainPort = await createPort();
 
 fork(require.resolve('rammerhead/bin.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
@@ -124,55 +117,104 @@ server.use((error, req, res, next) => {
 	next();
 });
 
-let port = process.env.PORT || 80;
-const hostname = process.env.hostname || '0.0.0.0';
+const http = createServer();
 
-try {
-	await tryBind(port);
-} catch (error) {
-	const newPort = await createPort(hostname);
-	console.error(
-		`${chalk.yellow(
-			chalk.bold(
-				`Address ${hostname}:${port} cannot be used. Binding to ${hostname}:${newPort} instead.`
-			)
-		)}\n`
-	);
-	port = newPort;
-}
-
-const urls = {};
-
-urls.localUrlForTerminal = `http://${
-	hostname === '0.0.0.0' ? 'localhost' : hostname
-}:${chalk.bold(port)}`;
-urls.localUrlForConfig = `http://${hostname}:${port}`;
-
-if ('REPL_SLUG' in process.env) {
-	urls.replUrlForTerminal = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
-	urls.replUrlForConfig = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
-}
-
-try {
-	urls.lanUrlForTerminal = `http://${address.ip()}:${chalk.bold(port)}`;
-	urls.lanUrlForConfig = `http://${address.ip()}:${port}`;
-	// eslint-disable-next-line no-empty
-} catch (_error) {}
-
-server.listen(port, hostname, () => {
-	clearConsole();
-	console.log(
-		`You can now view ${chalk.bold('website-aio')} in the browser.\n`
-	);
-	console.log(
-		[
-			`  ${chalk.bold('Local:')}            ${urls.localUrlForTerminal}\n`,
-			urls.lanUrlForTerminal &&
-				`  ${chalk.bold('On Your Network:')}  ${urls.lanUrlForTerminal}\n`,
-			urls.replUrlForTerminal &&
-				`  ${chalk.bold('Replit:')}           ${urls.replUrlForTerminal}\n`,
-		]
-			.filter(Boolean)
-			.join('')
-	);
+http.on('request', (req, res) => {
+	server(req, res);
 });
+
+http.on('listening', () => {
+	const addr = http.address();
+
+	// clear console:
+	process.stdout.write(
+		process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
+	);
+
+	console.log(`You can now view ${chalk.bold('website-aio')} in the browser.`);
+
+	console.log('');
+
+	console.log(
+		`  ${chalk.bold('Local:')}            http://${
+			addr.family === 'IPv6' ? `[${addr.address}]` : addr.address
+		}:${chalk.bold(addr.port)}`
+	);
+
+	try {
+		console.log(
+			`  ${chalk.bold('On Your Network:')}  http://${address.ip()}:${chalk.bold(
+				addr.port
+			)}`
+		);
+	} catch (err) {
+		// can't find LAN interface
+	}
+
+	if (process.env.REPL_SLUG && process.env.REPL_OWNER) {
+		console.log(
+			`  ${chalk.bold('Replit:')}           https://${process.env.REPL_SLUG}.${
+				process.env.REPL_OWNER
+			}.repl.co`
+		);
+	}
+
+	console.log('');
+});
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
+
+const tryListen = (port) =>
+	new Promise((resolve, reject) => {
+		const cleanup = () => {
+			http.off('error', errorListener);
+			http.off('listening', listener);
+		};
+
+		const errorListener = (err) => {
+			cleanup();
+			reject(err);
+		};
+
+		const listener = () => {
+			cleanup();
+			resolve();
+		};
+
+		http.on('error', errorListener);
+		http.on('listening', listener);
+
+		http.listen({
+			port,
+		});
+	});
+
+let port = parseInt(process.env.PORT || '');
+
+if (isNaN(port)) port = 8080;
+
+// ports to try before generating random ports
+// remove duplicates using Set
+const ports = [...new Set([port, 80, 8080, 3000])];
+
+while (true) {
+	try {
+		await tryListen(port);
+		break;
+	} catch (err) {
+		const newPort = ports.length > 0 ? ports.pop() : randomPort();
+
+		console.error(
+			chalk.yellow(
+				chalk.bold(
+					`Port ${port} cannot be used. Binding to ${newPort} instead.`
+				)
+			)
+		);
+
+		port = newPort;
+
+		// duration for user to view warnings:
+		await sleep(1000);
+	}
+}
