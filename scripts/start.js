@@ -1,13 +1,16 @@
 import address from 'address';
 import chalk from 'chalk';
-import { spawn } from 'child_process';
+import { fork } from 'child_process';
 import { expand } from 'dotenv-expand';
 import { config } from 'dotenv-flow';
 import express from 'express';
 import proxy from 'express-http-proxy';
+import { createRequire } from 'module';
 import { createServer } from 'net';
 import { join } from 'path';
 import { websitePath } from 'website';
+
+const require = createRequire(import.meta.url);
 
 // what a dotenv in a project like this serves: .env.local file containing developer port
 expand(config());
@@ -59,7 +62,7 @@ async function createPort(hostname) {
 
 const barePort = await createPort();
 
-spawn('npx', ['bare-server-node'], {
+fork(require.resolve('@tomphttp/bare-server-node/scripts/cli.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		...process.env,
@@ -70,7 +73,7 @@ spawn('npx', ['bare-server-node'], {
 const rhPort = await createPort();
 const rhCrossDomainPort = await createPort();
 
-spawn('npx', ['rammerhead'], {
+fork(require.resolve('rammerhead/bin.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		...process.env,
