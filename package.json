@@ -28,7 +28,7 @@
 		"express-http-proxy": "^1.6.3",
 		"rammerhead": "https://git.holy.how/attachments/7017bba8-f92a-4849-9d37-24bf47e437cb",
 		"rimraf": "^3.0.2",
-		"website": "https://git.holy.how/attachments/afbdadc7-5e51-43b1-b5b3-3fa85f0fc1de"
+		"website": "https://git.holy.how/attachments/470d044a-2b93-4eed-801f-83d5e2e47afd"
 	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^3.4.2",
