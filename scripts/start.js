@@ -58,7 +58,7 @@ const rhPort = await findPort();
 const rhCrossDomainPort = await findPort();
 const barePort = await findPort();
 
-fork(require.resolve('@tomphttp/bare-server-node/scripts/cli.js'), {
+fork(require.resolve('@tomphttp/bare-server-node/bin.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		...process.env,
