@@ -31,6 +31,8 @@ These repositories are setup when you deploy an instance.
 
 [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://github.com/holy-unblocker/website-aio/wiki/Deploy-to-Koyeb)
 
-If you are deploying to an alternative service or to a server, refer to the [wiki](https://github.com/holy-unblocker/website-aio/wiki).
+If you are deploying to an alternative service or to a server, refer to [Deploy via terminal](https://github.com/holy-unblocker/website-aio/wiki/Deploy-via-terminal).
+
+Additional information can be found on the [wiki](https://github.com/holy-unblocker/website-aio/wiki).
 
 If you need help deploying, open a ticket in our [Discord server](https://discord.gg/gvenmHBZsQ).
