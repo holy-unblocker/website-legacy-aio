@@ -14,6 +14,7 @@
 		"no-lone-blocks": "off",
 		"quotes": "off",
 		"eqeqeq": "error",
-		"prefer-const": "error"
+		"prefer-const": "error",
+		"camelcase": "error"
 	}
 }
