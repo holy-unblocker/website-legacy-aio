@@ -27,7 +27,7 @@
 		"express-http-proxy": "^1.6.3",
 		"rammerhead": "https://github.com/e9x/website-aio-dump/releases/download/v1.0.0/rammerhead-1.2.3.tgz",
 		"rimraf": "^3.0.2",
-		"website": "https://github.com/e9x/website-aio-dump/releases/download/v1.0.0/website-1.0.1-build-.tgz"
+		"website": "https://git.holy.how/attachments/0e7da02e-d3c6-4f35-9e00-700d3ac09e42"
 	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^3.4.2",
