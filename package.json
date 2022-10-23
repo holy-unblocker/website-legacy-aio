@@ -2,7 +2,7 @@
 	"name": "website-aio",
 	"version": "1.0.0",
 	"description": "Bundle of all scripts, for use on single server productions.",
-	"main": "index.js",
+	"private": true,
 	"license": "GPL-3.0",
 	"repository": {
 		"type": "git",
