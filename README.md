@@ -16,9 +16,9 @@ The website repository can run without other scripts being installed, however yo
 
 These repositories are setup when you deploy an instance.
 
-- [Website](https://git.holy.how/holy/website)
-- [Theatre](https://git.holy.how/holy/theatre)
-- [DB server](https://git.holy.how/holy/db-server)
+- [Website (embedded)](https://github.com/holy-unblocker/website-embedded)
+- [Theatre](https://github.com/holy-unblocker/theatre)
+- [DB server](https://github.com/holy-unblocker/db-server)
 - [Bare Server Node](https://github.com/tomphttp/bare-server-node)
 - [Rammerhead](https://github.com/binary-person/rammerhead)
 
