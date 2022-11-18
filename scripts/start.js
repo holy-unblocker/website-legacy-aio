@@ -38,7 +38,7 @@ const tryBind = (port) =>
 			server.close(() => resolve());
 		});
 
-		server.listen(port);
+		server.listen({ port });
 	});
 
 const findPort = async () => {
@@ -123,47 +123,6 @@ http.on('request', (req, res) => {
 	server(req, res);
 });
 
-http.on('listening', () => {
-	const addr = http.address();
-
-	// clear console:
-	process.stdout.write(
-		process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
-	);
-
-	console.log(`You can now view ${chalk.bold('website-aio')} in the browser.`);
-
-	console.log('');
-
-	console.log(
-		`  ${chalk.bold('Local:')}            http://${
-			addr.family === 'IPv6' ? `[${addr.address}]` : addr.address
-		}:${chalk.bold(addr.port)}`
-	);
-
-	try {
-		console.log(
-			`  ${chalk.bold('On Your Network:')}  http://${address.ip()}:${chalk.bold(
-				addr.port
-			)}`
-		);
-	} catch (err) {
-		// can't find LAN interface
-	}
-
-	if (process.env.REPL_SLUG && process.env.REPL_OWNER) {
-		console.log(
-			`  ${chalk.bold('Replit:')}           https://${process.env.REPL_SLUG}.${
-				process.env.REPL_OWNER
-			}.repl.co`
-		);
-	}
-
-	console.log('');
-});
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
-
 const tryListen = (port) =>
 	new Promise((resolve, reject) => {
 		const cleanup = () => {
@@ -189,32 +148,63 @@ const tryListen = (port) =>
 		});
 	});
 
-let port = parseInt(process.env.PORT || '');
+const ports = [80, 8080, 3000];
 
-if (isNaN(port)) port = 8080;
-
-// ports to try before generating random ports
-// remove duplicates using Set
-const ports = [...new Set([port, 80, 8080, 3000])];
+const envPort = Number(process.env.PORT);
+if (!isNaN(envPort)) ports.unshift(envPort);
 
 while (true) {
+	const port = ports.shift() || randomPort();
+
 	try {
 		await tryListen(port);
-		break;
-	} catch (err) {
-		const newPort = ports.length > 0 ? ports.pop() : randomPort();
 
-		console.error(
-			chalk.yellow(
-				chalk.bold(
-					`Port ${port} cannot be used. Binding to ${newPort} instead.`
-				)
-			)
+		// clear console:
+		process.stdout.write(
+			process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
 		);
 
-		port = newPort;
+		console.log(
+			`You can now view ${chalk.bold('website-aio')} in the browser.`
+		);
 
-		// duration for user to view warnings:
-		await sleep(1000);
+		console.log('');
+
+		const addr = http.address();
+
+		console.log(
+			`  ${chalk.bold('Local:')}            http://${
+				addr.family === 'IPv6' ? `[${addr.address}]` : addr.address
+			}${addr.port === 80 ? '' : ':' + chalk.bold(addr.port)}`
+		);
+
+		console.log(
+			`  ${chalk.bold('Local:')}            http://localhost${
+				addr.port === 80 ? '' : ':' + chalk.bold(addr.port)
+			}`
+		);
+
+		try {
+			console.log(
+				`  ${chalk.bold('On Your Network:')}  http://${address.ip()}${
+					addr.port === 80 ? '' : ':' + chalk.bold(addr.port)
+				}`
+			);
+		} catch (err) {
+			// can't find LAN interface
+		}
+
+		if (process.env.REPL_SLUG && process.env.REPL_OWNER) {
+			console.log(
+				`  ${chalk.bold('Replit:')}           https://${
+					process.env.REPL_SLUG
+				}.${process.env.REPL_OWNER}.repl.co`
+			);
+		}
+
+		console.log('');
+		break;
+	} catch (err) {
+		console.error(chalk.yellow(chalk.bold(`Couldn't bind to port ${port}.`)));
 	}
 }
