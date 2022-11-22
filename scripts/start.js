@@ -75,7 +75,7 @@ fork(require.resolve('rammerhead/bin.js'), {
 	},
 });
 
-server.use('/api/bare', proxy(`http://localhost:${barePort}`));
+server.use('/api/bare', proxy(`http://0.0.0.0:${barePort}`));
 server.use(
 	'/api/db',
 	proxy(`https://static.holy.how/`, {
