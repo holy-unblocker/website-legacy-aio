@@ -82,6 +82,12 @@ server.use(
 		proxyReqPathResolver: (req) => `/db/${req.url}`,
 	})
 );
+server.use(
+	'/cdn',
+	proxy(`https://static.holy.how/`, {
+		proxyReqPathResolver: (req) => `/cdn/${req.url}`,
+	})
+);
 
 const rammerheadProxy = proxy(`http://127.0.0.1:${rhPort}`, {
 	proxyReqPathResolver: (req) =>
