@@ -78,13 +78,13 @@ fork(require.resolve('rammerhead/bin.js'), {
 server.use('/api/bare', proxy(`http://0.0.0.0:${barePort}`));
 server.use(
 	'/api/db',
-	proxy(`https://static.holy.how/`, {
+	proxy(`https://holyubofficial.net/`, {
 		proxyReqPathResolver: (req) => `/db/${req.url}`,
 	})
 );
 server.use(
 	'/cdn',
-	proxy(`https://static.holy.how/`, {
+	proxy(`https://holyubofficial.net/`, {
 		proxyReqPathResolver: (req) => `/cdn/${req.url}`,
 	})
 );
