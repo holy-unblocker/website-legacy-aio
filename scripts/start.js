@@ -53,6 +53,8 @@ app.use(
 	})
 );
 
+app.use(express.static(websitePath, { fallthrough: false }));
+
 app.use((error, req, res, next) => {
 	if (error.statusCode === 404)
 		return res.sendFile(join(websitePath, '404.html'));
@@ -161,30 +163,32 @@ while (true) {
 
 		console.log('');
 
-		// start rammerhead late so the first port is always Holy Unblocker
-		const rhPort = await findPort();
-
-		fork(require.resolve('rammerhead/bin.js'), {
-			stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
-			env: {
-				...process.env,
-				PORT: rhPort,
-			},
-		});
-
-		const rammerheadProxy = proxy(`http://127.0.0.1:${rhPort}`, {
-			proxyReqPathResolver: (req) =>
-				req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
-		});
-
-		for (const url of rammerheadScopes) app.use(url, rammerheadProxy);
-
-		app.use(express.static(websitePath, { fallthrough: false }));
+		setTimeout(() => startRammerhead(), 30e3);
 
 		break;
 	} catch (err) {
 		console.error(chalk.yellow(chalk.bold(`Couldn't bind to port ${port}.`)));
 	}
+}
+
+async function startRammerhead() {
+	// start rammerhead late so the first port is always Holy Unblocker
+	const rhPort = await findPort();
+
+	fork(require.resolve('rammerhead/bin.js'), {
+		stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
+		env: {
+			...process.env,
+			PORT: rhPort,
+		},
+	});
+
+	const rammerheadProxy = proxy(`http://127.0.0.1:${rhPort}`, {
+		proxyReqPathResolver: (req) =>
+			req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
+	});
+
+	for (const url of rammerheadScopes) app.use(url, rammerheadProxy);
 }
 
 function randomPort() {
