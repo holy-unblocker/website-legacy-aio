@@ -72,6 +72,7 @@ app.use(
 		proxyReqPathResolver: (req) => `/db/${req.url}`,
 	})
 );
+
 app.use(
 	'/cdn',
 	proxy(`https://holyubofficial.net/`, {
