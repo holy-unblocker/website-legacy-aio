@@ -52,16 +52,6 @@ const findPort = async () => {
 	}
 };
 
-const rhPort = await findPort();
-
-fork(require.resolve('rammerhead/bin.js'), {
-	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
-	env: {
-		...process.env,
-		PORT: rhPort,
-	},
-});
-
 const app = express();
 
 app.use(
@@ -77,32 +67,6 @@ app.use(
 		proxyReqPathResolver: (req) => `/cdn/${req.url}`,
 	})
 );
-
-const rammerheadProxy = proxy(`http://127.0.0.1:${rhPort}`, {
-	proxyReqPathResolver: (req) =>
-		req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
-});
-
-for (const url of [
-	'/([a-z0-9]{32})*',
-	'/rammerhead.js',
-	'/hammerhead.js',
-	'/transport-worker.js',
-	'/task.js',
-	'/iframe-task.js',
-	'/worker-hammerhead.js',
-	'/messaging',
-	'/sessionexists',
-	'/deletesession',
-	'/newsession',
-	'/editsession',
-	'/needpassword',
-	'/syncLocalStorage',
-	'/api/shuffleDict',
-])
-	app.use(url, rammerheadProxy);
-
-app.use(express.static(websitePath, { fallthrough: false }));
 
 app.use((error, req, res, next) => {
 	if (error.statusCode === 404)
@@ -211,6 +175,44 @@ while (true) {
 		}
 
 		console.log('');
+
+		// start rammerhead late so the first port is always Holy Unblocker
+		const rhPort = await findPort();
+
+		fork(require.resolve('rammerhead/bin.js'), {
+			stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
+			env: {
+				...process.env,
+				PORT: rhPort,
+			},
+		});
+
+		const rammerheadProxy = proxy(`http://127.0.0.1:${rhPort}`, {
+			proxyReqPathResolver: (req) =>
+				req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
+		});
+
+		for (const url of [
+			'/([a-z0-9]{32})*',
+			'/rammerhead.js',
+			'/hammerhead.js',
+			'/transport-worker.js',
+			'/task.js',
+			'/iframe-task.js',
+			'/worker-hammerhead.js',
+			'/messaging',
+			'/sessionexists',
+			'/deletesession',
+			'/newsession',
+			'/editsession',
+			'/needpassword',
+			'/syncLocalStorage',
+			'/api/shuffleDict',
+		])
+			app.use(url, rammerheadProxy);
+
+		app.use(express.static(websitePath, { fallthrough: false }));
+
 		break;
 	} catch (err) {
 		console.error(chalk.yellow(chalk.bold(`Couldn't bind to port ${port}.`)));
