@@ -1,14 +1,14 @@
 import createBareServer from '@tomphttp/bare-server-node';
 import address from 'address';
 import chalk from 'chalk';
-import { fork } from 'child_process';
 import { expand } from 'dotenv-expand';
 import { config } from 'dotenv-flow';
 import express from 'express';
 import proxy from 'express-http-proxy';
-import { createServer } from 'http';
 import { createRequire } from 'module';
-import { join } from 'path';
+import { fork } from 'node:child_process';
+import { createServer } from 'node:http';
+import { join } from 'node:path';
 import { websitePath } from 'website';
 
 const require = createRequire(import.meta.url);
@@ -17,9 +17,6 @@ const require = createRequire(import.meta.url);
 expand(config());
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
-
-const server = express();
-
 // root <= 1024
 const portMin = 1025;
 const portMax = 65536;
@@ -67,13 +64,15 @@ fork(require.resolve('rammerhead/bin.js'), {
 	},
 });
 
-server.use(
+const app = express();
+
+app.use(
 	'/api/db',
 	proxy(`https://holyubofficial.net/`, {
 		proxyReqPathResolver: (req) => `/db/${req.url}`,
 	})
 );
-server.use(
+app.use(
 	'/cdn',
 	proxy(`https://holyubofficial.net/`, {
 		proxyReqPathResolver: (req) => `/cdn/${req.url}`,
@@ -101,20 +100,19 @@ for (const url of [
 	'/needpassword',
 	'/syncLocalStorage',
 	'/api/shuffleDict',
-]) {
-	server.use(url, rammerheadProxy);
-}
+])
+	app.use(url, rammerheadProxy);
 
-server.use(express.static(websitePath, { fallthrough: false }));
+app.use(express.static(websitePath, { fallthrough: false }));
 
-server.use((error, req, res, next) => {
+app.use((error, req, res, next) => {
 	if (error.statusCode === 404)
 		return res.sendFile(join(websitePath, '404.html'));
 
 	next();
 });
 
-const http = createServer();
+const server = createServer();
 
 const bare = createBareServer('/api/bare/', {
 	logErrors: false,
@@ -125,15 +123,15 @@ const bare = createBareServer('/api/bare/', {
 	},
 });
 
-http.on('request', (req, res) => {
+server.on('request', (req, res) => {
 	if (bare.shouldRoute(req)) {
 		bare.routeRequest(req, res);
 	} else {
-		server(req, res);
+		app(req, res);
 	}
 });
 
-http.on('upgrade', (req, socket, head) => {
+server.on('upgrade', (req, socket, head) => {
 	if (bare.shouldRoute(req)) {
 		bare.routeUpgrade(req, socket, head);
 	} else {
@@ -144,8 +142,8 @@ http.on('upgrade', (req, socket, head) => {
 const tryListen = (port) =>
 	new Promise((resolve, reject) => {
 		const cleanup = () => {
-			http.off('error', errorListener);
-			http.off('listening', listener);
+			server.off('error', errorListener);
+			server.off('listening', listener);
 		};
 
 		const errorListener = (err) => {
@@ -158,10 +156,10 @@ const tryListen = (port) =>
 			resolve();
 		};
 
-		http.on('error', errorListener);
-		http.on('listening', listener);
+		server.on('error', errorListener);
+		server.on('listening', listener);
 
-		http.listen({
+		server.listen({
 			port,
 		});
 	});
@@ -188,7 +186,7 @@ while (true) {
 
 		console.log('');
 
-		const addr = http.address();
+		const addr = server.address();
 
 		console.log(
 			`  ${chalk.bold('Local:')}            http://${
