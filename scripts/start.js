@@ -53,14 +53,12 @@ const findPort = async () => {
 };
 
 const rhPort = await findPort();
-const rhCrossDomainPort = await findPort();
 
 fork(require.resolve('rammerhead/bin.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	env: {
 		...process.env,
 		PORT: rhPort,
-		CROSS_DOMAIN_PORT: rhCrossDomainPort,
 	},
 });
 
