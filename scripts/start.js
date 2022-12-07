@@ -115,14 +115,7 @@ app.use((error, req, res, next) => {
 
 const server = createServer();
 
-const bare = createBareServer('/api/bare/', {
-	logErrors: false,
-	localAddress: undefined,
-	maintainer: {
-		email: 'tomphttp@sys32.dev',
-		website: 'https://github.com/tomphttp/',
-	},
-});
+const bare = createBareServer('/api/bare/');
 
 server.on('request', (req, res) => {
 	if (bare.shouldRoute(req)) {
