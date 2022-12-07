@@ -1,3 +1,4 @@
+import createBareServer from '@tomphttp/bare-server-node';
 import address from 'address';
 import chalk from 'chalk';
 import { fork } from 'child_process';
@@ -56,15 +57,6 @@ const findPort = async () => {
 
 const rhPort = await findPort();
 const rhCrossDomainPort = await findPort();
-const barePort = await findPort();
-
-fork(require.resolve('@tomphttp/bare-server-node/bin.js'), {
-	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
-	env: {
-		...process.env,
-		PORT: barePort,
-	},
-});
 
 fork(require.resolve('rammerhead/bin.js'), {
 	stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
@@ -75,7 +67,6 @@ fork(require.resolve('rammerhead/bin.js'), {
 	},
 });
 
-server.use('/api/bare', proxy(`http://0.0.0.0:${barePort}`));
 server.use(
 	'/api/db',
 	proxy(`https://holyubofficial.net/`, {
@@ -125,8 +116,29 @@ server.use((error, req, res, next) => {
 
 const http = createServer();
 
+const bare = createBareServer('/api/bare/', {
+	logErrors: false,
+	localAddress: undefined,
+	maintainer: {
+		email: 'tomphttp@sys32.dev',
+		website: 'https://github.com/tomphttp/',
+	},
+});
+
 http.on('request', (req, res) => {
-	server(req, res);
+	if (bare.shouldRoute(req)) {
+		bare.routeRequest(req, res);
+	} else {
+		server(req, res);
+	}
+});
+
+http.on('upgrade', (req, socket, head) => {
+	if (bare.shouldRoute(req)) {
+		bare.routeUpgrade(req, socket, head);
+	} else {
+		socket.end();
+	}
 });
 
 const tryListen = (port) =>
