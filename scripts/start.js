@@ -17,42 +17,27 @@ const require = createRequire(import.meta.url);
 expand(config());
 
 console.log(`${chalk.cyan('Starting the server...')}\n`);
-// root <= 1024
-const portMin = 1025;
-const portMax = 65536;
-
-const randomPort = () => ~~(Math.random() * (portMax - portMin)) + portMin;
-
-const tryBind = (port) =>
-	new Promise((resolve, reject) => {
-		// http server.. net server, same thing!
-		const server = createServer();
-
-		server.on('error', (error) => {
-			reject(error);
-		});
-
-		server.on('listening', () => {
-			server.close(() => resolve());
-		});
-
-		server.listen({ port });
-	});
-
-const findPort = async () => {
-	while (true) {
-		const port = randomPort();
-
-		try {
-			await tryBind(port);
-			return port;
-		} catch (err) {
-			// try again
-		}
-	}
-};
 
 const app = express();
+
+// used when forwarding the script
+const rammerheadScopes = [
+	'/([a-z0-9]{32})*',
+	'/rammerhead.js',
+	'/hammerhead.js',
+	'/transport-worker.js',
+	'/task.js',
+	'/iframe-task.js',
+	'/worker-hammerhead.js',
+	'/messaging',
+	'/sessionexists',
+	'/deletesession',
+	'/newsession',
+	'/editsession',
+	'/needpassword',
+	'/syncLocalStorage',
+	'/api/shuffleDict',
+];
 
 app.use(
 	'/api/db',
@@ -192,29 +177,46 @@ while (true) {
 				req.originalUrl.replace(/^\/[a-z0-9]{32}\/.*?:\/(?!\/)/, '$&/'),
 		});
 
-		for (const url of [
-			'/([a-z0-9]{32})*',
-			'/rammerhead.js',
-			'/hammerhead.js',
-			'/transport-worker.js',
-			'/task.js',
-			'/iframe-task.js',
-			'/worker-hammerhead.js',
-			'/messaging',
-			'/sessionexists',
-			'/deletesession',
-			'/newsession',
-			'/editsession',
-			'/needpassword',
-			'/syncLocalStorage',
-			'/api/shuffleDict',
-		])
-			app.use(url, rammerheadProxy);
+		for (const url of rammerheadScopes) app.use(url, rammerheadProxy);
 
 		app.use(express.static(websitePath, { fallthrough: false }));
 
 		break;
 	} catch (err) {
 		console.error(chalk.yellow(chalk.bold(`Couldn't bind to port ${port}.`)));
+	}
+}
+
+function randomPort() {
+	return ~~(Math.random() * (65536 - 1024 - 1)) + 1024;
+}
+
+function tryBind(port) {
+	return new Promise((resolve, reject) => {
+		// http server.. net server, same thing!
+		const server = createServer();
+
+		server.on('error', (error) => {
+			reject(error);
+		});
+
+		server.on('listening', () => {
+			server.close(() => resolve());
+		});
+
+		server.listen({ port });
+	});
+}
+
+async function findPort() {
+	while (true) {
+		const port = randomPort();
+
+		try {
+			await tryBind(port);
+			return port;
+		} catch (err) {
+			// try again
+		}
 	}
 }
