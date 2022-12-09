@@ -25,7 +25,7 @@
 		"dotenv-flow": "^3.2.0",
 		"express": "^4.18.2",
 		"express-http-proxy": "^1.6.3",
-		"rammerhead": "https://github.com/holy-unblocker/rammerhead/releases/download/v1.2.41-holy.4/rammerhead-1.2.41-holy.4.tgz",
+		"rammerhead": "https://github.com/holy-unblocker/rammerhead/releases/download/v1.2.41-holy.5/rammerhead-1.2.41-holy.5.tgz",
 		"rimraf": "^3.0.2",
 		"website": "https://github.com/holy-unblocker/website-embedded/releases/download/v1.0.0-holy.5/website-1.0.0-holy.5.tgz"
 	},
