@@ -35,3 +35,5 @@ If you are deploying to an alternative service or to a server, refer to [Deploy 
 Additional information can be found on the [wiki](https://github.com/holy-unblocker/website-aio/wiki).
 
 If you need help deploying, open a ticket in our [Discord server](https://discord.gg/gvenmHBZsQ).
+
+This is vercel deployment branch.
