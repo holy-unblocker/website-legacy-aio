@@ -1,4 +1,4 @@
-import createBareServer from '@tomphttp/bare-server-node';
+import { createBareServer } from '@tomphttp/bare-server-node';
 import address from 'address';
 import chalk from 'chalk';
 import { expand } from 'dotenv-expand';
